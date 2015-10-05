@@ -17,6 +17,7 @@
 #include "z_print_util.h"
 
 #include <iostream>
+//#include "m_pd.h"
 
 #ifdef LIBPD_USE_STD_MUTEX
     #if __cplusplus <= 201103L // C++ 11 check
@@ -35,6 +36,9 @@
 #endif
 
 using namespace std;
+
+
+
 
 namespace pd {
 
@@ -88,6 +92,8 @@ Patch PdBase::openPatch(const std::string& patch, const std::string& path) {
     }
     int dollarZero = libpd_getdollarzero(handle);
     _UNLOCK();
+
+    
     return Patch(handle, dollarZero, patch, path);
 }
 
@@ -870,6 +876,7 @@ bool PdBase::PdContext::init(const int numInChannels, const int numOutChannels, 
         // init libpd, should only be called once!
         if(!bLibPdInited) {
             libpd_queued_init();
+            init_externals();
             bLibPdInited = true;
         }
     }
@@ -894,6 +901,7 @@ bool PdBase::PdContext::init(const int numInChannels, const int numOutChannels, 
         // init libpd, should only be called once!
         if(!bLibPdInited) {
             libpd_init();
+            init_externals();
             bLibPdInited = true;
         }
     }

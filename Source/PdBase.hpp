@@ -33,6 +33,17 @@
 
 typedef struct _atom t_atom;
 
+
+extern "C"{
+extern void hammer_setup();
+extern void sickle_setup();
+extern void zexy_setup();
+static void init_externals(){
+        hammer_setup();
+        sickle_setup();
+        zexy_setup();
+    }
+}
 namespace pd {
 
 /// a Pure Data instance
@@ -486,7 +497,7 @@ class PdBase {
 
             private:
 
-                bool bLibPdInited; //< has libpd_init be called?
+                bool bLibPdInited = false; //< has libpd_init be called?
                 bool bInited;      //< is this pd context inited?
                 bool bQueued; //< is this context using the libpd_queued ringbuffer?
 
