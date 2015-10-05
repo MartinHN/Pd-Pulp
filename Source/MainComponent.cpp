@@ -33,16 +33,7 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (sendSlider1 = new SendSlider (1, processor));
-    addAndMakeVisible (sendSlider2 = new SendSlider (2, processor));
-    addAndMakeVisible (sendSlider5 = new SendSlider (3, processor));
-    addAndMakeVisible (sendSlider6 = new SendSlider (4, processor));
-    addAndMakeVisible (sendSlider7 = new SendSlider (5, processor));
-    addAndMakeVisible (sendSlider3 = new SendSlider (6, processor));
-    addAndMakeVisible (sendSlider4 = new SendSlider (7, processor));
-    addAndMakeVisible (sendSlider8 = new SendSlider (8, processor));
-    addAndMakeVisible (sendSlider9 = new SendSlider (9, processor));
-    addAndMakeVisible (sendSlider10 = new SendSlider (10, processor));
+
     addAndMakeVisible (findButton = new TextButton ("new button"));
     findButton->setButtonText (TRANS("Find patch..."));
     findButton->addListener (this);
@@ -101,7 +92,6 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     label2->setColour (TextEditor::textColourId, Colours::black);
     label2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-
     //[UserPreSize]
     //[/UserPreSize]
 
@@ -111,9 +101,10 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     //[Constructor] You can add your own custom stuff here..
     PureDataAudioProcessor& p = (PureDataAudioProcessor&) processor;
     pathField->setText(p.getPatchFile().getFileName(), dontSendNotification);
-
+    
     startTimer(25);
-
+    processor.addChangeListener(this);
+    
     //[/Constructor]
 }
 
@@ -122,16 +113,6 @@ MainComponent::~MainComponent()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    sendSlider1 = nullptr;
-    sendSlider2 = nullptr;
-    sendSlider5 = nullptr;
-    sendSlider6 = nullptr;
-    sendSlider7 = nullptr;
-    sendSlider3 = nullptr;
-    sendSlider4 = nullptr;
-    sendSlider8 = nullptr;
-    sendSlider9 = nullptr;
-    sendSlider10 = nullptr;
     findButton = nullptr;
     pathField = nullptr;
     reloadButton = nullptr;
@@ -142,6 +123,7 @@ MainComponent::~MainComponent()
 
 
     //[Destructor]. You can add your own custom destruction code here..
+    ((PureDataAudioProcessor*)&processor)->removeChangeListener(this);
     //[/Destructor]
 }
 
@@ -162,16 +144,6 @@ void MainComponent::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    sendSlider1->setBounds (9, 122, 98, 120);
-    sendSlider2->setBounds (101, 122, 98, 120);
-    sendSlider5->setBounds (197, 122, 98, 120);
-    sendSlider6->setBounds (293, 122, 98, 120);
-    sendSlider7->setBounds (389, 122, 98, 120);
-    sendSlider3->setBounds (9, 246, 98, 120);
-    sendSlider4->setBounds (101, 246, 98, 120);
-    sendSlider8->setBounds (197, 246, 98, 120);
-    sendSlider9->setBounds (293, 246, 98, 120);
-    sendSlider10->setBounds (389, 246, 98, 120);
     findButton->setBounds (368, 56, 104, 24);
     pathField->setBounds (24, 56, 328, 24);
     reloadButton->setBounds (352, 90, 64, 20);
@@ -179,10 +151,15 @@ void MainComponent::resized()
     statusField->setBounds (25, 91, 311, 17);
     label->setBounds (22, 16, 170, 32);
     label2->setBounds (168, 24, 304, 16);
+    
+    headerSize = editButton->getBottom();
+    std::cout << "header "<< headerSize << std::endl;
     //[UserResized] Add your own custom resize handling here..
 
     //[/UserResized]
 }
+
+
 
 void MainComponent::buttonClicked (Button* buttonThatWasClicked)
 {

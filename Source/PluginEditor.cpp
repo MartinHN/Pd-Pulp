@@ -37,9 +37,9 @@ PureDataAudioProcessorEditor::PureDataAudioProcessorEditor (PureDataAudioProcess
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (300, 200);
 
-
+    setVisible(true);
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
@@ -71,7 +71,37 @@ void PureDataAudioProcessorEditor::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
+    PureDataAudioProcessor * p = (PureDataAudioProcessor*)&processor;
+    int idx = 0;
+    std::cout << "resizing " << pd_parameters.size()<<std::endl;;
+    if(pd_parameters.size()==0){
+        return;
+    }
+    for(auto & param:p->pulpParameters){
+        switch(param.type){
+                
+            case PureDataAudioProcessor::PulpParameter::KNOB:{
 
+                pd_parameters[idx]->setBounds (getWidth() * (1+param.getX()) ,
+                              getHeight() *param.getY()+headerSize ,
+                              getWidth() * param.getWidth() ,
+                              getHeight() * param.getHeight()+headerSize
+                              )
+                ;
+                
+                break;
+            }
+            default:
+                std::cout << "no viable parameters for "<<param.name<< std::endl;;
+                break;
+        }
+        
+
+        Component * c = pd_parameters[idx];
+         std::cout << " setting : " <<c->getName() << " : " << c->getX() << "," << c->getY() <<"," << c->getWidth() << "," << c->getHeight() << std::endl;
+        
+        idx++;
+    }
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -79,6 +109,56 @@ void PureDataAudioProcessorEditor::resized()
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void PureDataAudioProcessorEditor::changeListenerCallback (ChangeBroadcaster* source){
+    PureDataAudioProcessor* p =  (PureDataAudioProcessor*)source;
+    
+    if(p!=NULL){
+        rebuildParams(p);
+        
+    }
+    
+}
+
+void PureDataAudioProcessorEditor::rebuildParams(PureDataAudioProcessor * p){
+    for(auto & c:pd_parameters){
+        removeChildComponent(c);
+    }
+    pd_parameters.clear();
+    
+    int idx = 0;
+    for(auto & param:p->pulpParameters){
+        switch(param.type){
+                
+            case PureDataAudioProcessor::PulpParameter::KNOB:{
+                p->setParameterName(idx, param.name);
+
+                SendSlider * c =new SendSlider(idx+1,*p);
+                c->setName(param.name);
+                c->setBounds (                  getWidth() * (1+param.getX()) ,
+                                                (getHeight()-headerSize) *param.getY() ,
+                                                 getWidth() * param.getWidth() ,
+                                                 (getHeight()-headerSize) * param.getHeight()
+                                                 );
+                c->setRange(param.min, param.max);
+                pd_parameters.add(c);
+                std::cout << " adding : " <<c->getName() << std::endl;
+                break;
+            }
+            default:
+                std::cout << "no viable parameters for "<<param.name<< std::endl;;
+            break;
+        }
+        
+        idx++;
+    }
+    
+    for(auto & c:pd_parameters){
+       
+        addAndMakeVisible(c);
+    }
+    PureDataAudioProcessorEditor::resized();
+
+}
 //[/MiscUserCode]
 
 

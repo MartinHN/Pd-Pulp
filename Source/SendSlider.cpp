@@ -36,7 +36,7 @@ SendSlider::SendSlider (int index, AudioProcessor& processor)
     //[/Constructor_pre]
 
     addAndMakeVisible (slider = new Slider ("slider"));
-    slider->setRange (0, 1, 0);
+
     slider->setSliderStyle (Slider::RotaryVerticalDrag);
     slider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
     slider->setColour (Slider::thumbColourId, Colour (0xff5c5c5c));
@@ -67,6 +67,7 @@ SendSlider::SendSlider (int index, AudioProcessor& processor)
     //[Constructor] You can add your own custom stuff here..
     PureDataAudioProcessor& p = (PureDataAudioProcessor&) processor;
     String labelText(p.getParameterName(index-1));
+    setName(labelText);
     label->setText(labelText, dontSendNotification);
     
     startTimer(25);
@@ -100,9 +101,13 @@ void SendSlider::resized()
 {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
+    Rectangle<int> area = getLocalBounds();
+    std::cout << "area" << area.toString() << std::endl;
+    slider->setBounds (area.removeFromTop(area.getHeight()*3/4));
+    label->setBounds (area);
 
-    slider->setBounds (14, 35, 71, 80);
-    label->setBounds (-4, 5, 104, 24);
+//    slider->setBounds (14, 35, 71, 80);
+//    label->setBounds (-4, 5, 104, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }

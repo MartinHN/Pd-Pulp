@@ -25,7 +25,7 @@
 #include "PluginProcessor.h"
 //[/Headers]
 
-
+#include "SendSlider.h"
 
 //==============================================================================
 /**
@@ -35,7 +35,7 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PureDataAudioProcessorEditor  : public AudioProcessorEditor
+class PureDataAudioProcessorEditor  : public AudioProcessorEditor ,public ChangeListener
 {
 public:
     //==============================================================================
@@ -44,15 +44,20 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void changeListenerCallback (ChangeBroadcaster* source);
+    void rebuildParams(PureDataAudioProcessor * p);
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
 
-
+    int headerSize=0;    
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+
+    OwnedArray<Component>pd_parameters;
+    
     //[/UserVariables]
 
     //==============================================================================

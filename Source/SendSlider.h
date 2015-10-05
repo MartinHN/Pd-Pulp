@@ -54,7 +54,7 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved);
     void labelTextChanged (Label* labelThatHasChanged);
 
-
+    void setRange(float min,float max){slider->setRange(min,max);}
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.

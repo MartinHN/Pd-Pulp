@@ -128,7 +128,7 @@ void PureDataAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
     // initialisation that you need..
     reloadPatch(sampleRate);
     
-    pos = 0;
+
 }
 
 void PureDataAudioProcessor::releaseResources()
@@ -149,6 +149,10 @@ void PureDataAudioProcessor::releaseResources()
 
 void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+
+    
+    clearMidiBuffer(buffer.getNumSamples());
+    
     if (isInstanceLocked) {
         return;
     }
@@ -171,8 +175,11 @@ void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     MidiBuffer::Iterator it (midiMessages);
     int samplePosition = buffer.getNumSamples();
     
+    
     while (it.getNextEvent (message, samplePosition))
     {
+        std::cout << "in" << message.getNoteNumber() << " , " << message.getFloatVelocity() << " c " << message.getChannel() <<  "n" << samplePosition << std::endl;
+
         if (message.isNoteOn (true)) {
             pd->sendNoteOn (message.getChannel(), message.getNoteNumber(), message.getVelocity());
         }
@@ -180,6 +187,12 @@ void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
             pd->sendNoteOn (message.getChannel(), message.getNoteNumber(), 0);
         }
     }
+    
+    
+    
+    //output recieved
+
+
     
     while (len > 0)
     {
@@ -209,6 +222,31 @@ void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
         
         idx += max;
         len -= max;
+    }
+    
+    midiMessages = getMidiBuffer();
+
+
+//   send daw info if needed
+    sendDawInfo();
+
+}
+
+void PureDataAudioProcessor::sendDawInfo(){
+    if(pd){
+        
+        getPlayHead()->getCurrentPosition(currentPositionInfo);
+        if(dawInfo.tempo != currentPositionInfo.bpm){
+            dawInfo.tempo = currentPositionInfo.bpm;
+            pd->sendFloat("pulp_tempo",dawInfo.tempo);
+            std::cout << "set bpm : " << dawInfo.tempo << std::endl;
+        }
+        int newBeat = (int)(currentPositionInfo.ppqPosition*currentPositionInfo.timeSigNumerator);
+        if(dawInfo.beat != newBeat){
+            dawInfo.beat = newBeat;
+            pd->sendFloat("pulp_beat",dawInfo.beat);
+            std::cout << "ppq " << dawInfo.beat << std::endl;
+        }
     }
 }
 
@@ -308,6 +346,7 @@ void PureDataAudioProcessor::setStateInformation (const void* data, int sizeInBy
 
 void PureDataAudioProcessor::reloadPatch (double sampleRate)
 {
+    std::cout << "reloading" << std::endl;
     if (isInstanceLocked) {
         status = "Currently only one simultaneous instance of this plugin is allowed";
         return;
@@ -323,9 +362,14 @@ void PureDataAudioProcessor::reloadPatch (double sampleRate)
         pd->computeAudio(false);
         pd->closePatch(patch);
     }
+    else{
     
     pd = new pd::PdBase;
-    pd->init (getNumInputChannels(), getNumOutputChannels(), sampleRate);
+    }
+    pd->setReceiver(this);
+    pd->setMidiReceiver(this);
+    pd->init (getNumInputChannels(), getNumOutputChannels(), sampleRate,false);
+    
     
     int numChannels = jmin (getNumInputChannels(), getNumOutputChannels());
     pdInBuffer.calloc (pd->blockSize() * numChannels);
@@ -350,11 +394,67 @@ void PureDataAudioProcessor::reloadPatch (double sampleRate)
 
     if (patch.isValid()) {
         pd->computeAudio (true);
+        
         status = "Patch loaded successfully";
     } else {
         status = "Selected patch is not valid, sorry";
     }
+    
+    // clear info to send it again on next process block
+    dawInfo.clear();
+    updateParametersFromPatch();
+}
 
+
+void PureDataAudioProcessor::updateParametersFromPatch(){
+    juce::StringArray destLines;
+    File guipatch = File(patchfile.getParentDirectory().getChildFile("gui.pd"));
+    if(!guipatch.exists()){
+        return;
+    }
+    std::cout << "loading gui" << std::endl;
+    guipatch.readLines(destLines);
+    pulpParameters.clear();
+    int width = 0;
+    int height = 0;
+    for(auto & l : destLines){
+        juce::StringArray curS ;
+        curS.addTokens (l,
+                        " ;",
+                        "");
+        
+        
+        if(l.startsWith("#N canvas")){
+            width =curS[4].getIntValue();
+            height = curS[5].getIntValue();
+        }
+        else if(l.startsWith("#X obj")){
+            
+            if(curS.size()>4){
+                // numBox
+                if(curS[4] == "nbx" && curS.size()>15){
+                    PulpParameter p;
+                    p.type = PulpParameter::KNOB;
+                    p.name = curS[11];
+                    p.min = curS[7].getFloatValue();
+                    p.max = curS[8].getFloatValue();
+                    p.setBounds(curS[2].getFloatValue()/width,
+                                curS[3].getFloatValue()/height,
+                                curS[5].getFloatValue()*10/width,
+                                curS[6].getFloatValue()/height);
+                    pulpParameters.add(p);
+                     std::cout << p.name << std::endl;
+                }
+                else {
+                
+                }
+           
+                
+            }
+        }
+        
+    }
+    sendChangeMessage();
 }
 
 void PureDataAudioProcessor::setPatchFile(File file)

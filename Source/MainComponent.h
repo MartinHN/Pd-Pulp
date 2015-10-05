@@ -26,7 +26,7 @@
 #include "PluginEditor.h"
 //[/Headers]
 
-#include "SendSlider.h"
+
 
 
 //==============================================================================
@@ -61,17 +61,7 @@ private:
     void timerCallback();
     //[/UserVariables]
 
-    //==============================================================================
-    ScopedPointer<SendSlider> sendSlider1;
-    ScopedPointer<SendSlider> sendSlider2;
-    ScopedPointer<SendSlider> sendSlider5;
-    ScopedPointer<SendSlider> sendSlider6;
-    ScopedPointer<SendSlider> sendSlider7;
-    ScopedPointer<SendSlider> sendSlider3;
-    ScopedPointer<SendSlider> sendSlider4;
-    ScopedPointer<SendSlider> sendSlider8;
-    ScopedPointer<SendSlider> sendSlider9;
-    ScopedPointer<SendSlider> sendSlider10;
+
     ScopedPointer<TextButton> findButton;
     ScopedPointer<Label> pathField;
     ScopedPointer<TextButton> reloadButton;

@@ -19,7 +19,7 @@
 //==============================================================================
 /**
 */
-class PureDataAudioProcessor  : public AudioProcessor
+class PureDataAudioProcessor  : public AudioProcessor,public pd::PdReceiver,public pd::PdMidiReceiver,public ChangeBroadcaster
 {
 public:
     //==============================================================================
@@ -70,6 +70,21 @@ public:
     static bool otherInstanceAlreadyRunning;
     bool isInstanceLocked = false;
 
+    
+    
+    
+    class PulpParameter: public juce::Rectangle<float>{
+    public:
+        String name;
+        float min;
+        float max;
+        enum Type{
+            KNOB= 0
+        };
+        Type type;
+    };
+    
+    Array<PulpParameter> pulpParameters;
 private:
     ScopedPointer<pd::PdBase> pd;
     int pos;
@@ -88,6 +103,27 @@ private:
     pd::Patch patch;
     HeapBlock<float> pdInBuffer, pdOutBuffer;
     double cachedSampleRate;
+    
+    
+    AudioPlayHead::CurrentPositionInfo currentPositionInfo;
+    
+    typedef struct {
+    float tempo;
+    int beat;
+        void clear(){
+            tempo = 0;
+            beat = 0;
+        }
+    }DAWInfo;
+    
+    DAWInfo dawInfo;
+    void sendDawInfo();
+    
+    
+    void updateParametersFromPatch();
+    
+    
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PureDataAudioProcessor)
 };
