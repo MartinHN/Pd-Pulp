@@ -38,7 +38,7 @@ SendSlider::SendSlider (int index, AudioProcessor& processor)
     addAndMakeVisible (slider = new Slider ("slider"));
 
     slider->setSliderStyle (Slider::RotaryVerticalDrag);
-    slider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 20);
+    slider->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     slider->setColour (Slider::thumbColourId, Colour (0xff5c5c5c));
     slider->setColour (Slider::rotarySliderFillColourId, Colour (0x7fdddddd));
     slider->setColour (Slider::rotarySliderOutlineColourId, Colour (0x66e6e6e6));
@@ -50,7 +50,7 @@ SendSlider::SendSlider (int index, AudioProcessor& processor)
     label->setTooltip (TRANS("Click to set the name of the corresponding Pure Data receive port."));
     label->setFont (Font (15.00f, Font::plain));
     label->setJustificationType (Justification::centred);
-    label->setEditable (true, true, false);
+    label->setEditable (false, true, false);
     label->setColour (Label::backgroundColourId, Colour (0x00404040));
     label->setColour (Label::textColourId, Colour (0xffc4c4c4));
     label->setColour (TextEditor::textColourId, Colour (0xffe9e9e9));
@@ -92,7 +92,7 @@ void SendSlider::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
-
+    g.fillAll(juce::Colours::red);
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
@@ -102,9 +102,11 @@ void SendSlider::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
     Rectangle<int> area = getLocalBounds();
-    std::cout << "area" << area.toString() << std::endl;
-    slider->setBounds (area.removeFromTop(area.getHeight()*3/4));
-    label->setBounds (area);
+    
+    label->setTopLeftPosition(area.getX() + labelRelPos.getX(),
+                      area.getY() + labelRelPos.getY());
+    label->setSize(200, 20);
+    slider->setBounds (area);
 
 //    slider->setBounds (14, 35, 71, 80);
 //    label->setBounds (-4, 5, 104, 24);

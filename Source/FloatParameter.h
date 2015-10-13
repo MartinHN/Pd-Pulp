@@ -29,8 +29,13 @@ public:
         return value;
     }
     
+    bool hasToObserve(){
+        bool _c = changed;
+        changed = false;
+        return _c;
+    }
     void setValue (float newValue) override
-    {
+    {   changed = true;
         value = newValue;
     }
     
@@ -61,6 +66,7 @@ public:
     
 private:
     float defaultValue, value;
+    bool changed ;
     String name;
 };
 

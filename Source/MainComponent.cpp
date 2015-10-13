@@ -103,7 +103,7 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     pathField->setText(p.getPatchFile().getFileName(), dontSendNotification);
     
     startTimer(25);
-    processor.addChangeListener(this);
+//    processor.addChangeListener(this);
     
     //[/Constructor]
 }
@@ -123,7 +123,7 @@ MainComponent::~MainComponent()
 
 
     //[Destructor]. You can add your own custom destruction code here..
-    ((PureDataAudioProcessor*)&processor)->removeChangeListener(this);
+//    ((PureDataAudioProcessor*)&processor)->removeChangeListener(this);
     //[/Destructor]
 }
 
@@ -152,8 +152,9 @@ void MainComponent::resized()
     label->setBounds (22, 16, 170, 32);
     label2->setBounds (168, 24, 304, 16);
     
-    headerSize = editButton->getBottom();
-    std::cout << "header "<< headerSize << std::endl;
+    headerRect.setPosition(0, 0);
+    headerRect.setBottom(editButton->getBottom() + 10);
+    headerRect.setRight(editButton->getRight() + 10);
     //[UserResized] Add your own custom resize handling here..
 
     //[/UserResized]
@@ -180,6 +181,7 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
             pathField->setText(fc.getResult().getFileName(), dontSendNotification);
             p.setPatchFile(fc.getResult());
             p.reloadPatch(NULL);
+            updatePatch();
         }
         //[/UserButtonCode_findButton]
     }
@@ -187,6 +189,7 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_reloadButton] -- add your button handler code here..
         p.reloadPatch(NULL);
+        updatePatch();
         //[/UserButtonCode_reloadButton]
     }
     else if (buttonThatWasClicked == editButton)

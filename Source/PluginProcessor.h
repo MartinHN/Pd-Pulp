@@ -19,7 +19,10 @@
 //==============================================================================
 /**
 */
-class PureDataAudioProcessor  : public AudioProcessor,public pd::PdReceiver,public pd::PdMidiReceiver,public ChangeBroadcaster
+class PureDataAudioProcessor  : public AudioProcessor,
+public pd::PdReceiver,
+public pd::PdMidiReceiver
+
 {
 public:
     //==============================================================================
@@ -72,33 +75,16 @@ public:
 
     
     
+    File patchfile;
     
-    class PulpParameter: public juce::Rectangle<float>{
-    public:
-        String name;
-        float min;
-        float max;
-        enum Type{
-            KNOB= 0
-        };
-        Type type;
-    };
-    
-    Array<PulpParameter> pulpParameters;
 private:
     ScopedPointer<pd::PdBase> pd;
     int pos;
     
     Array<FloatParameter*> parameterList;
     
-    AudioProcessorParameter* freq;
-    AudioProcessorParameter* volume;
-    AudioProcessorParameter* del_delay;
-    AudioProcessorParameter* del_feedback;
-    AudioProcessorParameter* del_mode_rate;
-    AudioProcessorParameter* del_mode_depth;
     
-    File patchfile;
+    
      
     pd::Patch patch;
     HeapBlock<float> pdInBuffer, pdOutBuffer;
@@ -120,7 +106,6 @@ private:
     void sendDawInfo();
     
     
-    void updateParametersFromPatch();
     
     
 

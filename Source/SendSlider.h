@@ -56,6 +56,8 @@ public:
 
     void setRange(float min,float max){slider->setRange(min,max);}
 
+    Point<float> labelRelPos;
+    float LabelSize = 15;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     int index;
@@ -65,6 +67,8 @@ private:
     //==============================================================================
     ScopedPointer<Slider> slider;
     ScopedPointer<Label> label;
+    
+    
 
 
     //==============================================================================

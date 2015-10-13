@@ -26,7 +26,7 @@
 //[/Headers]
 
 #include "SendSlider.h"
-
+#include "GUIMaker.h"
 //==============================================================================
 /**
                                                                     //[Comments]
@@ -35,7 +35,7 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PureDataAudioProcessorEditor  : public AudioProcessorEditor ,public ChangeListener
+class PureDataAudioProcessorEditor  : public AudioProcessorEditor ,public GUIMaker
 {
 public:
     //==============================================================================
@@ -44,14 +44,14 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void changeListenerCallback (ChangeBroadcaster* source);
+    void updatePatch ();
     void rebuildParams(PureDataAudioProcessor * p);
     //[/UserMethods]
 
     void paint (Graphics& g);
     void resized();
 
-    int headerSize=0;    
+    Rectangle<int> headerRect;
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.

@@ -38,10 +38,15 @@ extern "C"{
 extern void hammer_setup();
 extern void sickle_setup();
 extern void zexy_setup();
+extern void popup_setup();
+extern void     knob_setup();
 static void init_externals(){
         hammer_setup();
         sickle_setup();
         zexy_setup();
+        popup_setup();
+        knob_setup();
+    
     }
 }
 namespace pd {
