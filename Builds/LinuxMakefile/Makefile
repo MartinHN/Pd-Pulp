@@ -18,7 +18,7 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "ZEXY_LIBRARY" -D "TARGET_ARCH=x86_64" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -fPIC -O0
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -Wl,--no-undefined -shared -L/usr/X11R6/lib/ -L../../libpd/ -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lpd-linux 
@@ -38,7 +38,7 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "ZEXY_LIBRARY" -D "TARGET_ARCH=x86_64" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -fPIC -O3
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -Wl,--no-undefined -shared -fvisibility=hidden -L/usr/X11R6/lib/ -L../../libpd/ -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lpd-linux 
