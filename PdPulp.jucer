@@ -464,10 +464,10 @@
     <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" externalLibraries="pd-linux"
                 extraDefs="" vst3Folder="">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
-        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/&#10;../../libpd/" isDebug="1"
+                       optimisation="1" targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/&#10;../../libpd/"
+                       isDebug="0" optimisation="3" targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="JuceLibraryCode/modules"/>
