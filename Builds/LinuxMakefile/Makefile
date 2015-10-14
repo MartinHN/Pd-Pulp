@@ -18,7 +18,7 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -fPIC -O0
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -Wl,--no-undefined -shared -L/usr/X11R6/lib/ -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lpd-linux 
@@ -38,7 +38,7 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  CPPFLAGS := $(DEPFLAGS) -D "LINUX=1" -D "NDEBUG=1" -D "ZEXY_LIBRARY" -D "JUCER_LINUX_MAKE_6D53C8B4=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3\ SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules -I ../../libpd/pure-data/src -I ../../libpd/libpd_wrapper -I ../../libpd/libpd_wrapper/util -I ../../Source/externals/cyclone -I ../../Source/externals/cyclone/shared
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -fPIC -O3
   CXXFLAGS += $(CFLAGS) -std=c++11
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -Wl,--no-undefined -shared -fvisibility=hidden -L/usr/X11R6/lib/ -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lpd-linux 
@@ -49,6 +49,13 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/PdBase_917893ee.o \
+  $(OBJDIR)/PdTypes_2c8748c6.o \
+  $(OBJDIR)/ringbuffer_42114019.o \
+  $(OBJDIR)/z_print_util_2d7539a2.o \
+  $(OBJDIR)/z_queued_dd997181.o \
+  $(OBJDIR)/LabelComponent_ec4bff72.o \
+  $(OBJDIR)/LookNfeel_4af74696.o \
   $(OBJDIR)/accum_9b178248.o \
   $(OBJDIR)/acos_bab39301.o \
   $(OBJDIR)/active_e436ef01.o \
@@ -328,17 +335,10 @@ OBJECTS := \
   $(OBJDIR)/z_zexy_ca452cd9.o \
   $(OBJDIR)/z~_778ac8cc.o \
   $(OBJDIR)/zexy_bebd7634.o \
-  $(OBJDIR)/LabelComponent_ec4bff72.o \
-  $(OBJDIR)/LookNfeel_4af74696.o \
   $(OBJDIR)/MainComponent_a6ffb4a5.o \
   $(OBJDIR)/PdAudioProcessor_dc268ef9.o \
   $(OBJDIR)/PdAudioProcessorEditor_1788cb06.o \
-  $(OBJDIR)/PdBase_917893ee.o \
   $(OBJDIR)/PdParamGetter_ec36b6c5.o \
-  $(OBJDIR)/PdTypes_2c8748c6.o \
-  $(OBJDIR)/ringbuffer_42114019.o \
-  $(OBJDIR)/z_print_util_2d7539a2.o \
-  $(OBJDIR)/z_queued_dd997181.o \
   $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
@@ -371,6 +371,41 @@ clean:
 strip:
 	@echo Stripping Pd Pulp
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/PdBase_917893ee.o: ../../Source/PdBase.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PdBase.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/PdTypes_2c8748c6.o: ../../Source/PdTypes.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PdTypes.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ringbuffer_42114019.o: ../../Source/ringbuffer.c
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ringbuffer.c"
+	@$(CC) $(CFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/z_print_util_2d7539a2.o: ../../Source/z_print_util.c
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling z_print_util.c"
+	@$(CC) $(CFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/z_queued_dd997181.o: ../../Source/z_queued.c
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling z_queued.c"
+	@$(CC) $(CFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/LabelComponent_ec4bff72.o: ../../Source/LabelComponent.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling LabelComponent.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/LookNfeel_4af74696.o: ../../Source/LookNfeel.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling LookNfeel.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/accum_9b178248.o: ../../Source/externals/cyclone/hammer/accum.c
 	-@mkdir -p $(OBJDIR)
@@ -1767,16 +1802,6 @@ $(OBJDIR)/zexy_bebd7634.o: ../../Source/externals/zexy/src/zexy.c
 	@echo "Compiling zexy.c"
 	@$(CC) $(CFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/LabelComponent_ec4bff72.o: ../../Source/LabelComponent.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling LabelComponent.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/LookNfeel_4af74696.o: ../../Source/LookNfeel.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling LookNfeel.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/MainComponent_a6ffb4a5.o: ../../Source/MainComponent.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling MainComponent.cpp"
@@ -1792,35 +1817,10 @@ $(OBJDIR)/PdAudioProcessorEditor_1788cb06.o: ../../Source/PdAudioProcessorEditor
 	@echo "Compiling PdAudioProcessorEditor.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/PdBase_917893ee.o: ../../Source/PdBase.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling PdBase.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/PdParamGetter_ec36b6c5.o: ../../Source/PdParamGetter.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PdParamGetter.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/PdTypes_2c8748c6.o: ../../Source/PdTypes.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling PdTypes.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/ringbuffer_42114019.o: ../../Source/ringbuffer.c
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling ringbuffer.c"
-	@$(CC) $(CFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/z_print_util_2d7539a2.o: ../../Source/z_print_util.c
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling z_print_util.c"
-	@$(CC) $(CFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/z_queued_dd997181.o: ../../Source/z_queued.c
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling z_queued.c"
-	@$(CC) $(CFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
 	-@mkdir -p $(OBJDIR)

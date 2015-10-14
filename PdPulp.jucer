@@ -13,6 +13,29 @@
               companyEmail="">
   <MAINGROUP id="bHW1xW" name="Pd Pulp">
     <GROUP id="{F7E3C56F-7CAF-CB35-5672-4BC60FA8EA87}" name="Source">
+      <GROUP id="{0E592C20-C2C4-1F09-6C73-32F70C87A396}" name="PdGlue">
+        <FILE id="EWFNGg" name="PdBase.cpp" compile="1" resource="0" file="Source/PdBase.cpp"/>
+        <FILE id="N4baGL" name="PdBase.hpp" compile="0" resource="0" file="Source/PdBase.hpp"/>
+        <FILE id="Td6ISZ" name="PdMidiReceiver.hpp" compile="0" resource="0"
+              file="Source/PdMidiReceiver.hpp"/>
+        <FILE id="Sm2C3e" name="PdReceiver.hpp" compile="0" resource="0" file="Source/PdReceiver.hpp"/>
+        <FILE id="XO8meE" name="PdTypes.cpp" compile="1" resource="0" file="Source/PdTypes.cpp"/>
+        <FILE id="YYE3EO" name="PdTypes.hpp" compile="0" resource="0" file="Source/PdTypes.hpp"/>
+        <FILE id="TwM1No" name="ringbuffer.c" compile="1" resource="0" file="Source/ringbuffer.c"/>
+        <FILE id="k8g4Eq" name="ringbuffer.h" compile="0" resource="0" file="Source/ringbuffer.h"/>
+        <FILE id="GARzz8" name="z_print_util.c" compile="1" resource="0" file="Source/z_print_util.c"/>
+        <FILE id="jwveLU" name="z_print_util.h" compile="0" resource="0" file="Source/z_print_util.h"/>
+        <FILE id="GOFgdb" name="z_queued.c" compile="1" resource="0" file="Source/z_queued.c"/>
+        <FILE id="SZXet8" name="z_queued.h" compile="0" resource="0" file="Source/z_queued.h"/>
+      </GROUP>
+      <GROUP id="{8BC5C010-84D7-6F6E-7C46-7F08C7550B8F}" name="UI">
+        <FILE id="NFIHZF" name="LabelComponent.cpp" compile="1" resource="0"
+              file="Source/LabelComponent.cpp"/>
+        <FILE id="SNdMaU" name="LabelComponent.h" compile="0" resource="0"
+              file="Source/LabelComponent.h"/>
+        <FILE id="rSdqgu" name="LookNfeel.cpp" compile="1" resource="0" file="Source/LookNfeel.cpp"/>
+        <FILE id="lhlU4G" name="LookNfeel.h" compile="0" resource="0" file="Source/LookNfeel.h"/>
+      </GROUP>
       <GROUP id="{5D7D6ED1-0423-E120-9857-5660E502F63B}" name="externals">
         <GROUP id="{E61AD9F8-CD17-9637-1001-825361651097}" name="cyclone">
           <FILE id="kwOp3z" name="build_counter" compile="0" resource="1" file="Source/externals/cyclone/build_counter"/>
@@ -390,12 +413,6 @@
           <FILE id="vePOm2" name="zexy-meta.pd.in" compile="0" resource="1" file="Source/externals/zexy/zexy-meta.pd.in"/>
         </GROUP>
       </GROUP>
-      <FILE id="NFIHZF" name="LabelComponent.cpp" compile="1" resource="0"
-            file="Source/LabelComponent.cpp"/>
-      <FILE id="SNdMaU" name="LabelComponent.h" compile="0" resource="0"
-            file="Source/LabelComponent.h"/>
-      <FILE id="rSdqgu" name="LookNfeel.cpp" compile="1" resource="0" file="Source/LookNfeel.cpp"/>
-      <FILE id="lhlU4G" name="LookNfeel.h" compile="0" resource="0" file="Source/LookNfeel.h"/>
       <FILE id="tiQXB4" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="MSXKzP" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
@@ -407,25 +424,12 @@
             file="Source/PdAudioProcessorEditor.cpp"/>
       <FILE id="Ch0SLd" name="PdAudioProcessorEditor.h" compile="0" resource="0"
             file="Source/PdAudioProcessorEditor.h"/>
-      <FILE id="EWFNGg" name="PdBase.cpp" compile="1" resource="0" file="Source/PdBase.cpp"/>
-      <FILE id="N4baGL" name="PdBase.hpp" compile="0" resource="0" file="Source/PdBase.hpp"/>
-      <FILE id="Td6ISZ" name="PdMidiReceiver.hpp" compile="0" resource="0"
-            file="Source/PdMidiReceiver.hpp"/>
       <FILE id="Hs7saP" name="PdParameter.h" compile="0" resource="0" file="Source/PdParameter.h"/>
       <FILE id="bXezuz" name="PdParamGetter.cpp" compile="1" resource="0"
             file="Source/PdParamGetter.cpp"/>
       <FILE id="pS0hJp" name="PdParamGetter.h" compile="0" resource="0" file="Source/PdParamGetter.h"/>
-      <FILE id="Sm2C3e" name="PdReceiver.hpp" compile="0" resource="0" file="Source/PdReceiver.hpp"/>
-      <FILE id="XO8meE" name="PdTypes.cpp" compile="1" resource="0" file="Source/PdTypes.cpp"/>
-      <FILE id="YYE3EO" name="PdTypes.hpp" compile="0" resource="0" file="Source/PdTypes.hpp"/>
-      <FILE id="TwM1No" name="ringbuffer.c" compile="1" resource="0" file="Source/ringbuffer.c"/>
-      <FILE id="k8g4Eq" name="ringbuffer.h" compile="0" resource="0" file="Source/ringbuffer.h"/>
       <FILE id="tHfL6T" name="SendSlider.h" compile="0" resource="0" file="Source/SendSlider.h"/>
       <FILE id="f5uZJq" name="SendToggle.h" compile="0" resource="0" file="Source/SendToggle.h"/>
-      <FILE id="GARzz8" name="z_print_util.c" compile="1" resource="0" file="Source/z_print_util.c"/>
-      <FILE id="jwveLU" name="z_print_util.h" compile="0" resource="0" file="Source/z_print_util.h"/>
-      <FILE id="GOFgdb" name="z_queued.c" compile="1" resource="0" file="Source/z_queued.c"/>
-      <FILE id="SZXet8" name="z_queued.h" compile="0" resource="0" file="Source/z_queued.h"/>
     </GROUP>
     <FILE id="gjNyHI" name="Config.h" compile="0" resource="0" file="Source/Config.h"/>
   </MAINGROUP>
@@ -461,9 +465,9 @@
                 extraDefs="ZEXY_LIBRARY">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="Pd Pulp"/>
+                       targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="Pd Pulp"/>
+                       targetName="Pd Pulp" headerPath="../../libpd/pure-data/src&#10;../../libpd/libpd_wrapper&#10;../../libpd/libpd_wrapper/util&#10;../../Source/externals/cyclone&#10;../../Source/externals/cyclone/shared"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="JuceLibraryCode/modules"/>
