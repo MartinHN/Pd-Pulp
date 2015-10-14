@@ -76,7 +76,7 @@ public:
     
     
     File patchfile;
-    
+    void clearParameters();    
 private:
     ScopedPointer<pd::PdBase> pd;
     int pos;
@@ -104,6 +104,7 @@ private:
     
     DAWInfo dawInfo;
     void sendDawInfo();
+
     
     
     

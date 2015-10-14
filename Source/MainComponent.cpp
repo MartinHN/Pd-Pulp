@@ -33,7 +33,7 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-
+    setLookAndFeel(new LookNFeel);
     addAndMakeVisible (findButton = new TextButton ("new button"));
     findButton->setButtonText (TRANS("Find patch..."));
     findButton->addListener (this);
@@ -96,13 +96,15 @@ MainComponent::MainComponent (PureDataAudioProcessor& processor)
     //[/UserPreSize]
 
     setSize (500, 385);
-
+    
 
     //[Constructor] You can add your own custom stuff here..
     PureDataAudioProcessor& p = (PureDataAudioProcessor&) processor;
     pathField->setText(p.getPatchFile().getFileName(), dontSendNotification);
     
     startTimer(25);
+    resized();
+    updatePatch();
 //    processor.addChangeListener(this);
     
     //[/Constructor]
@@ -190,6 +192,7 @@ void MainComponent::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_reloadButton] -- add your button handler code here..
         p.reloadPatch(NULL);
         updatePatch();
+        repaint();
         //[/UserButtonCode_reloadButton]
     }
     else if (buttonThatWasClicked == editButton)

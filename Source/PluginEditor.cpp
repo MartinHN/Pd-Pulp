@@ -17,63 +17,40 @@
  ==============================================================================
  */
 
-//[Headers] You can add your own extra header files here...
-//[/Headers]
 
 #include "PluginEditor.h"
 
 
-//[MiscUserDefs] You can add your own user definitions and misc code here...
-//[/MiscUserDefs]
-
-//==============================================================================
 PureDataAudioProcessorEditor::PureDataAudioProcessorEditor (PureDataAudioProcessor& p)
 : AudioProcessorEditor (p)
 
 {
-    //[Constructor_pre] You can add your own custom stuff here..
-    //[/Constructor_pre]
-    
-    
-    //[UserPreSize]
-    //[/UserPreSize]
-    updatePatch();
+
     
     
     
     setVisible(true);
-    //[Constructor] You can add your own custom stuff here..
-    //[/Constructor]
+
 }
 
 PureDataAudioProcessorEditor::~PureDataAudioProcessorEditor()
 {
-    //[Destructor_pre]. You can add your own custom destruction code here..
-    //[/Destructor_pre]
-    
-    
-    
-    //[Destructor]. You can add your own custom destruction code here..
-    //[/Destructor]
+
 }
 
-//==============================================================================
 void PureDataAudioProcessorEditor::paint (Graphics& g)
 {
-    //[UserPrePaint] Add your own custom painting code here..
-    //[/UserPrePaint]
+
     
     g.fillAll (Colours::white);
-    
-    //[UserPaint] Add your own custom painting code here..
-    //[/UserPaint]
+
 }
 
 void PureDataAudioProcessorEditor::resized()
 {
-    //[UserPreResize] Add your own custom resize code here..
+
     AudioProcessorEditor::resized();
-    //[/UserPreResize]
+
     PureDataAudioProcessor * p = (PureDataAudioProcessor*)&processor;
     int idx = 0;
     std::cout << "resizing " << pd_parameters.size()<<std::endl;;
@@ -85,32 +62,28 @@ void PureDataAudioProcessorEditor::resized()
     
     for(auto & param:pulpParameters){
         Rectangle<float> b = param;
+        LabelComponent * c = ((LabelComponent*)pd_parameters[idx]);
+        c->labelRelPos.setXY(area.getX() + area.getWidth() * param.labelRect.getX() ,
+                             area.getY() + area.getHeight() *param.labelRect.getY()
+                             );
         pd_parameters[idx]->setBounds (
-                                       area.getX() + area.getWidth() * (b.getX()) ,
-                                       area.getY() + area.getHeight() *b.getY(),
+                                       area.getX() + area.getWidth() * b.getX() ,
+                                       area.getY() + area.getHeight()* b.getY(),
                                        area.getWidth() * b.getWidth() ,
-                                       area.getHeight() * b.getHeight()
+                                       area.getHeight()* b.getHeight()
                                        )
         ;
-        ((SendSlider*)pd_parameters[idx])->labelRelPos.setXY(area.getX() + area.getWidth() * (param.labelRect.getX()) ,
-                                                             area.getY() + area.getHeight() *param.labelRect.getY()
-                                                             );
-
         
         
         
-        Component * c = pd_parameters[idx];
-        std::cout << " setting : " <<param.getX() << "," << c->getName() << " : " << c->getX() << "," << c->getY() <<"," << c->getWidth() << "," << c->getHeight() << std::endl;
+        std::cout << " resizing : " << ((SendSlider*)c)->labelRelPos.toString() << "," << c->getName() << " : " << c->getX() << "," << c->getY() <<"," << c->getWidth() << "," << c->getHeight() << std::endl;
         
         idx++;
     }
-    //[UserResized] Add your own custom resize handling here..
-    //[/UserResized]
+ 
 }
 
 
-
-//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void PureDataAudioProcessorEditor::updatePatch (){
     PureDataAudioProcessor* p =  (PureDataAudioProcessor*)&processor;
     
@@ -138,47 +111,37 @@ void PureDataAudioProcessorEditor::rebuildParams(PureDataAudioProcessor * p){
     
     
     for(auto & param:pulpParameters){
-        switch(param.type){
-                
-            case PulpParameter::KNOB:{
-                p->setParameterName(idx, param.name);
-                
-                SendSlider * c =new SendSlider(idx+1,*p);
-                c->setName(param.name);
-                c->setBounds (
-                              area.getX() + area.getWidth() * param.getX() ,
-                              area.getY() + area.getHeight()* param.getY(),
-                              area.getWidth() * param.getWidth() ,
-                              area.getHeight()* param.getHeight()
-                              );
-                c->setRange(param.min, param.max);
-                pd_parameters.add(c);
-                std::cout << " adding knob: " <<c->getName() << std::endl;
-                break;
-            }
-                
-            case PulpParameter::NUMBOX:{
-                p->setParameterName(idx, param.name);
-                
-                SendSlider * c =new SendSlider(idx+1,*p);
-                c->setName(param.name);
-                c->setBounds (
-                              area.getX() + area.getWidth() * param.getX() ,
-                              area.getY() + area.getHeight()* param.getY(),
-                              area.getWidth() * param.getWidth() ,
-                              area.getHeight() * param.getHeight()
-                              );
-                c->setRange(param.min, param.max);
-                pd_parameters.add(c);
-                std::cout << " adding numbox: " <<c->getName() << std::endl;
-                break;
-            }
-            default:
-                std::cout << "no viable parameters for "<<param.name<< std::endl;;
-                break;
+        LabelComponent *c;
+        
+        
+        if(param.type == PulpParameter::KNOB || param.type == PulpParameter::NUMBOX){
+            c =new SendSlider(idx,*p);
+            ((SendSlider*)c)->setRange(param.min, param.max);
+            
         }
+        else if(param.type == PulpParameter::TOGGLE){
+            c =new SendToggle(idx,*p);
+            
+        }
+        if(c!=nullptr){
+        
+        c->labelSize = param.labelSize;
+        c->setName(param.labelName);
+        p->setParameterName(idx, param.name);
+        pd_parameters.add(c);
+        c->setBounds (
+                      area.getX() + area.getWidth() * param.getX(),
+                      area.getY() + area.getHeight()* param.getY(),
+                      area.getWidth() * param.getWidth() ,
+                      area.getHeight()* param.getHeight()
+                      );
         
         idx++;
+        }
+        else{
+            std::cout << "no viable parameters for "<<param.name<< std::endl;;
+
+        }
     }
     
     for(auto & c:pd_parameters){
@@ -188,30 +151,5 @@ void PureDataAudioProcessorEditor::rebuildParams(PureDataAudioProcessor * p){
     
     
 }
-//[/MiscUserCode]
 
 
-//==============================================================================
-#if 0
-/*  -- Introjucer information section --
- 
- This is where the Introjucer stores the metadata that describe this GUI layout, so
- make changes in here at your peril!
- 
- BEGIN_JUCER_METADATA
- 
- <JUCER_COMPONENT documentType="Component" className="PureDataAudioProcessorEditor"
- componentName="" parentClasses="public AudioProcessorEditor"
- constructorParams="PureDataAudioProcessor&amp; p" variableInitialisers="AudioProcessorEditor (p)"
- snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
- fixedSize="0" initialWidth="600" initialHeight="400">
- <BACKGROUND backgroundColour="ffffffff"/>
- </JUCER_COMPONENT>
- 
- END_JUCER_METADATA
- */
-#endif
-
-
-//[EndFile] You can add extra defines here...
-//[/EndFile]

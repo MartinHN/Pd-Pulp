@@ -28,11 +28,15 @@ class GUIMaker {
         enum Type{
             KNOB= 0,
             NUMBOX,
+            TOGGLE,
             POPUP
         };
         Type type;
         Rectangle<float> labelRect;
         Rectangle<float> getEnclosing(){return getUnion(labelRect);}
+        bool hasLabel;
+        int labelSize;
+        String labelName;
     };
     
     Array<PulpParameter> pulpParameters;

@@ -36,6 +36,7 @@ public:
     }
     void setValue (float newValue) override
     {   changed = true;
+        std::cout << name << std::endl;
         value = newValue;
     }
     

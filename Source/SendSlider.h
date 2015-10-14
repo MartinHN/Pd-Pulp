@@ -22,6 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+#include "LabelComponent.h"
 //[/Headers]
 
 
@@ -34,40 +35,60 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class SendSlider  : public Component,
-                    public Timer,
-                    public SliderListener,
-                    public LabelListener
+class SendSlider  : public LabelComponent,public SliderListener
 {
 public:
     //==============================================================================
-    SendSlider (int index, AudioProcessor& processor);
-    ~SendSlider();
+    SendSlider (int index, AudioProcessor& processor)
+    : LabelComponent(index,processor)
+    
+    {
+        //[Constructor_pre] You can add your own custom stuff here..
+        //[/Constructor_pre]
+        
+        addAndMakeVisible (component = new Slider ("slider"));
+        
+        getSlider()->setSliderStyle (Slider::RotaryVerticalDrag);
+        getSlider()->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 12);
+        getSlider()->setColour (Slider::thumbColourId, Colour (0xff5c5c5c));
+        getSlider()->setColour (Slider::rotarySliderFillColourId, Colour (0x7fdddddd));
+        getSlider()->setColour (Slider::rotarySliderOutlineColourId, Colour (0x66e6e6e6));
+        getSlider()->setColour (Slider::textBoxHighlightColourId, Colour (0x40a6a6a6));
+        getSlider()->setColour(juce::Slider::textBoxBackgroundColourId, juce::Colours::transparentWhite);
+        getSlider()->setColour(juce::Slider::textBoxOutlineColourId, juce::Colours::transparentWhite);
+        getSlider()->addListener (this);
+  
+        
+        //[UserPreSize]
+        //[/UserPreSize]
+        
+        setSize (100, 130);
+        
+        
+        
+        
+        //[/Constructor]
+    }
+    ~SendSlider(){};
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void timerCallback();
+    void timerCallback(){getSlider()->setValue(processor.getParameter(index), NotificationType::dontSendNotification);};
     //[/UserMethods]
+    void resizeComponent(){};
+    void sliderValueChanged (Slider* sliderThatWasMoved){
+        if (sliderThatWasMoved == getSlider()){
+         processor.setParameterNotifyingHost(index, sliderThatWasMoved->getValue());
+//            sliderThatWasMoved->setValue(processor.getParameter(index), NotificationType::dontSendNotification);
+            
+        }
+    }
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void labelTextChanged (Label* labelThatHasChanged);
+    void setRange(float min,float max){getSlider()->setRange(min,max);}
 
-    void setRange(float min,float max){slider->setRange(min,max);}
-
-    Point<float> labelRelPos;
-    float LabelSize = 15;
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    int index;
-    AudioProcessor& processor;
-    //[/UserVariables]
-
-    //==============================================================================
-    ScopedPointer<Slider> slider;
-    ScopedPointer<Label> label;
-    
+    Slider* getSlider(){return (Slider*) component.get();}
     
 
 

@@ -15,7 +15,7 @@ bool PureDataAudioProcessor::otherInstanceAlreadyRunning;
 //==============================================================================
 PureDataAudioProcessor::PureDataAudioProcessor()
 {
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<100; i++) {
         FloatParameter* p = new FloatParameter (0.5, ("Param" + (String) (i+1)).toStdString());
         parameterList.add(p);
         addParameter(p);
@@ -42,6 +42,9 @@ void PureDataAudioProcessor::setParameterName(int index, String name)
     FloatParameter* p = parameterList.getUnchecked(index);
     p->setName(name);
 }
+
+
+
 
 
 const String PureDataAudioProcessor::getName() const

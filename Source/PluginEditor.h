@@ -26,6 +26,7 @@
 //[/Headers]
 
 #include "SendSlider.h"
+#include "SendToggle.h"
 #include "GUIMaker.h"
 //==============================================================================
 /**
