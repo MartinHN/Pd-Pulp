@@ -13,11 +13,11 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class FloatParameter : public AudioProcessorParameter
+class PdParameter : public AudioProcessorParameter
 {
 public:
     
-    FloatParameter (float defaultParameterValue, const String& paramName)
+    PdParameter (float defaultParameterValue, const String& paramName)
     : defaultValue (defaultParameterValue),
     value (defaultParameterValue),
     name (paramName)
@@ -28,6 +28,12 @@ public:
     {
         return value;
     }
+    void setStringType(bool t){stringType=t;}
+    bool isStringType(){return stringType;}
+    
+    String getStringValue(){return stringValue[value];}
+    
+    void setStringValue(StringArray &s){stringValue=s;}
     
     bool hasToObserve(){
         bool _c = changed;
@@ -36,7 +42,6 @@ public:
     }
     void setValue (float newValue) override
     {   changed = true;
-        std::cout << name << std::endl;
         value = newValue;
     }
     
@@ -69,6 +74,8 @@ private:
     float defaultValue, value;
     bool changed ;
     String name;
+    bool stringType=false;
+    StringArray stringValue;
 };
 
 

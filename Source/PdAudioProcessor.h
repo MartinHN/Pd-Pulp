@@ -13,7 +13,7 @@
 
 #include "PdBase.hpp"
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "FloatParameter.h"
+#include "PdParamGetter.h"
 
 
 //==============================================================================
@@ -21,7 +21,8 @@
 */
 class PureDataAudioProcessor  : public AudioProcessor,
 public pd::PdReceiver,
-public pd::PdMidiReceiver
+public pd::PdMidiReceiver,
+public PdParamGetter
 
 {
 public:
@@ -80,8 +81,7 @@ public:
 private:
     ScopedPointer<pd::PdBase> pd;
     int pos;
-    
-    Array<FloatParameter*> parameterList;
+
     
     
     

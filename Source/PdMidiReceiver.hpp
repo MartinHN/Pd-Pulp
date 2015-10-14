@@ -33,7 +33,7 @@ class PdMidiReceiver {
         msg.setTimeStamp(juce::Time::currentTimeMillis());
         buf.addEvent(msg, sampleNumber);
         sampleNumber++;
-        std::cout << "noteOn  :" << pitch << " , " << velocity << std::endl;
+        DBG( "noteOn  :" << pitch << " , " << velocity );;
     
     }
         virtual void receiveControlChange(const int channel, const int controller, const int value) {

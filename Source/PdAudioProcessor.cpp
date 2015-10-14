@@ -7,24 +7,33 @@
  
  ==============================================================================
  */
-#include "PluginProcessor.h"
+#include "PdAudioProcessor.h"
 #include "MainComponent.h"
+#include "Config.h"
 
 bool PureDataAudioProcessor::otherInstanceAlreadyRunning;
 
 //==============================================================================
 PureDataAudioProcessor::PureDataAudioProcessor()
 {
-    for (int i=0; i<100; i++) {
-        FloatParameter* p = new FloatParameter (0.5, ("Param" + (String) (i+1)).toStdString());
-        parameterList.add(p);
-        addParameter(p);
-    }
+    
+    
+    
+
     
     if(PureDataAudioProcessor::otherInstanceAlreadyRunning) {
         isInstanceLocked = true;
     }
     PureDataAudioProcessor::otherInstanceAlreadyRunning = true;
+    
+    setPatchFile(File(PATCH_PATH));
+    getParameterDescsFromPatch(patchfile);
+    setParametersFromDescs();
+    for(auto & p:pdParameters){
+        addParameter(p);
+    }
+    
+
 }
 
 PureDataAudioProcessor::~PureDataAudioProcessor()
@@ -39,7 +48,7 @@ PureDataAudioProcessor::~PureDataAudioProcessor()
 //==============================================================================
 void PureDataAudioProcessor::setParameterName(int index, String name)
 {
-    FloatParameter* p = parameterList.getUnchecked(index);
+    PdParameter* p = pdParameters.getUnchecked(index);
     p->setName(name);
 }
 
@@ -169,8 +178,8 @@ void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     int len = buffer.getNumSamples();
     int idx = 0;
     
-    for (int i=0; i<parameterList.size(); i++) {
-        FloatParameter* parameter = parameterList[i];
+    for (int i=0; i<pdParameters.size(); i++) {
+        PdParameter* parameter = pdParameters[i];
         if(parameter->hasToObserve())
             pd->sendFloat(parameter->getName(300).toStdString(), parameter->getValue());
     }
@@ -182,7 +191,7 @@ void PureDataAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer
     
     while (it.getNextEvent (message, samplePosition))
     {
-        std::cout << "in" << message.getNoteNumber() << " , " << message.getFloatVelocity() << " c " << message.getChannel() <<  "n" << samplePosition << std::endl;
+        DBG("in" << message.getNoteNumber() << " , " << message.getFloatVelocity() << " c " << message.getChannel() <<  "n" << samplePosition);
         
         if (message.isNoteOn (true)) {
             pd->sendNoteOn (message.getChannel(), message.getNoteNumber(), message.getVelocity());
@@ -243,13 +252,13 @@ void PureDataAudioProcessor::sendDawInfo(){
         if(dawInfo.tempo != currentPositionInfo.bpm){
             dawInfo.tempo = currentPositionInfo.bpm;
             pd->sendFloat("pulp_tempo",dawInfo.tempo);
-            std::cout << "set bpm : " << dawInfo.tempo << std::endl;
+            DBG("set bpm : " << dawInfo.tempo);
         }
         int newBeat = (int)(currentPositionInfo.ppqPosition*currentPositionInfo.timeSigNumerator);
         if(dawInfo.beat != newBeat){
             dawInfo.beat = newBeat;
             pd->sendFloat("pulp_beat",dawInfo.beat);
-            std::cout << "ppq " << dawInfo.beat << std::endl;
+            DBG("ppq " << dawInfo.beat );;
         }
     }
 }
@@ -277,19 +286,19 @@ void PureDataAudioProcessor::getStateInformation (MemoryBlock& destData)
     XmlElement xml(getName().replace(" ", "-"));
     
     // patchfile
-    XmlElement* patchfileElement = new XmlElement("patchfile");
-    patchfileElement->setAttribute("path", patchfile.getParentDirectory().getFullPathName());
-    patchfileElement->setAttribute("fullpath", patchfile.getFullPathName());
-    patchfileElement->setAttribute("filename", patchfile.getFileName());
-    xml.addChildElement(patchfileElement);
+//    XmlElement* patchfileElement = new XmlElement("patchfile");
+//    patchfileElement->setAttribute("path", patchfile.getParentDirectory().getFullPathName());
+//    patchfileElement->setAttribute("fullpath", patchfile.getFullPathName());
+//    patchfileElement->setAttribute("filename", patchfile.getFileName());
+//    xml.addChildElement(patchfileElement);
     
     // parameters
     XmlElement* parameterListElement = new XmlElement("parameterList");
     
-    for(size_t i = 0; i < parameterList.size(); ++i) {
+    for(size_t i = 0; i < pdParameters.size(); ++i) {
         
         XmlElement* parameterElement = new XmlElement("parameter");
-        FloatParameter* parameter = parameterList[i];
+        PdParameter* parameter = pdParameters[i];
         parameterElement->setAttribute("index", (int) parameter->getParameterIndex());
         parameterElement->setAttribute("name", parameter->getName(256));
         parameterElement->setAttribute("value", (double) parameter->getValue());
@@ -300,7 +309,7 @@ void PureDataAudioProcessor::getStateInformation (MemoryBlock& destData)
     
     MemoryOutputStream stream;
     xml.writeToStream(stream, "");
-    //std::cout << "save [" << stream.toString() << "] " << std::endl;
+    //DBG("save [" << stream.toString() << "] " );;
     
     copyXmlToBinary(xml, destData);
 }
@@ -317,31 +326,34 @@ void PureDataAudioProcessor::setStateInformation (const void* data, int sizeInBy
         
         MemoryOutputStream stream;
         xml->writeToStream(stream, "<?xml version=\"1.0\"?>");
-        //std::cout << "load [" << stream.toString() << "] " << std::endl;
+        //DBG("load [" << stream.toString() << "] " );;
         
         forEachXmlChildElement (*xml, child)
         {
-            std::cout << " - load : " << child->getTagName() << std::endl;
+            DBG(" - load : " << child->getTagName() );;
             if(child->hasTagName("patchfile")) {
-                File path(child->getStringAttribute ("fullpath"));
-                if (path.exists()) {
-                    patchfile = path; // creates a copy
-                    reloadPatch(NULL);
-                } else {
-                    // Todo add exclamation mark or something
-                    std::cout << "cant find " << child->getStringAttribute("fullpath") << std::endl;
-                }
+//                File path(child->getStringAttribute ("fullpath"));
+//                if (path.exists()) {
+//                    patchfile = path; // creates a copy
+//                    reloadPatch(NULL);
+//                } else {
+//                    // Todo add exclamation mark or something
+//                    DBG("cant find " << child->getStringAttribute("fullpath") );;
+//                }
             }
             
             if(child->hasTagName("parameterList")) {
                 forEachXmlChildElement (*child, parameterElement) {
                     
-                    //std::cout << "loading param " << parameterElement->getStringAttribute("name");
-                    //std::cout << "[" << parameterElement->getIntAttribute("index") << "]: ";
-                    //std::cout << parameterElement->getDoubleAttribute("value") << std::endl;
-                    
+
+                    if(parameterElement->getIntAttribute("index")<pdParameters.size()){
+                    DBG("loading param " << parameterElement->getStringAttribute("name"));;
                     setParameter(parameterElement->getIntAttribute("index"), (float) parameterElement->getDoubleAttribute("value"));
                     setParameterName(parameterElement->getIntAttribute("index"), parameterElement->getStringAttribute("name"));
+                    }
+                    else{
+                        DBG("DAW saved old Parameter" );;
+                    }
                 }
             }
         }
@@ -350,7 +362,7 @@ void PureDataAudioProcessor::setStateInformation (const void* data, int sizeInBy
 
 void PureDataAudioProcessor::reloadPatch (double sampleRate)
 {
-    std::cout << "reloading" << std::endl;
+    DBG("reloading Patch" );;
     if (isInstanceLocked) {
         status = "Currently only one simultaneous instance of this plugin is allowed";
         return;

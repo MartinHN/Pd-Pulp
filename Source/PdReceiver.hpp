@@ -14,6 +14,7 @@
 #pragma once
 
 #include "PdTypes.hpp"
+#include "Config.h"
 #include <iostream>
 namespace pd {
 
@@ -23,7 +24,11 @@ class PdReceiver {
     public:
 
         /// print
-        virtual void print(const std::string& message) {std::cerr <<"recieved : " << message << std::endl;};
+        virtual void print(const std::string& message) {
+#ifdef PD_CONSOLE
+            DBG("recieved : " << message)
+#endif
+        };
 
         /// messages
         virtual void receiveBang(const std::string& dest) {}
