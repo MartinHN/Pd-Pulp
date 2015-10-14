@@ -14,11 +14,11 @@ void z_zexy_setup(void)
 	setup_0x3e0x7e(); /* 0x3e0x7e */
 	setup_0x7c0x7c0x7e(); /* 0x7c0x7c0x7e */
 	a2l_setup(); /* a2l */
-	abs_tilde_setup(); /* abs~ */
+	//abs_tilde_setup(); /* abs~ */
 	absgn_tilde_setup(); /* absgn~ */
 	atof_setup(); /* atof */
 	atoi_setup(); /* atoi */
-	avg_tilde_setup(); /* avg~ */
+	//avg_tilde_setup(); /* avg~ */
 	blockmirror_tilde_setup(); /* blockmirror~ */
 	blockshuffle_tilde_setup(); /* blockshuffle~ */
 	blockswap_tilde_setup(); /* blockswap~ */
@@ -89,7 +89,7 @@ void z_zexy_setup(void)
 	time_setup(); /* time */
 	unpack_tilde_setup(); /* unpack~ */
 	unpack_setup(); /* unpack */
-	urn_setup(); /* urn */
+	//urn_setup(); /* urn */
 	wrap_setup(); /* wrap */
 	z_tilde_setup(); /* z~ */
 }

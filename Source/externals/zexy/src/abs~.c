@@ -147,6 +147,7 @@ static void *sigABS_new(void)
   return (x);
 }
 
+#if 0
 void abs_tilde_setup(void)
 {
   sigABS_class = class_new(gensym("abs~"), (t_newmethod)sigABS_new, 0,
@@ -159,3 +160,4 @@ void abs_tilde_setup(void)
 
   zexy_register("abs~");
 }
+#endif

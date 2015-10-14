@@ -72,7 +72,7 @@ static void avg_help(void)
   post("avg~\t:: outputs the arithmetic mean of each signal-vector");
 }
 
-
+#if 0
 void avg_tilde_setup(void)
 {
   avg_class = class_new(gensym("avg~"), (t_newmethod)avg_new, 0,
@@ -83,3 +83,4 @@ void avg_tilde_setup(void)
   class_addmethod(avg_class, (t_method)avg_help, gensym("help"), 0);
   zexy_register("avg~");
 }
+#endif

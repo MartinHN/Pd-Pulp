@@ -137,7 +137,7 @@ static void urn_help(t_urn*x)
 {
   post("\n"HEARTSYMBOL" urn\t\t:: generate randum numbers without repetition");
 }
-
+#if 0
 void urn_setup(void)
 {
   urn_class = class_new(gensym("urn"), (t_newmethod)urn_new, 
@@ -152,3 +152,4 @@ void urn_setup(void)
 
   zexy_register("urn");
 }
+#endif

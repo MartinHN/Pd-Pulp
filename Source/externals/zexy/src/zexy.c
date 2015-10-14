@@ -161,7 +161,7 @@ void zexy_setup(void)
   z_zexy_setup();
 }
 
-#ifndef __WIN32__
+#if 0
 void verbose(int level, const char *fmt, ...){
   char buf[MAXPDSTRING];
   va_list ap;
